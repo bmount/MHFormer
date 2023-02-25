@@ -137,6 +137,7 @@ def get_pose3D(video_path, output_dir):
 
     model_dict = model.state_dict()
     # Put the pretrained model of MHFormer in 'checkpoint/pretrained/351'
+    #model_path = 'checkpoint/0208_2150_33_81/epoch_11.pth'
     model_path = sorted(glob.glob(os.path.join(args.previous_dir, '*.pth')))[0]
 
     pre_dict = torch.load(model_path)
@@ -214,7 +215,7 @@ def get_pose3D(video_path, output_dir):
 
         output_dir_2D = output_dir +'pose2D/'
         os.makedirs(output_dir_2D, exist_ok=True)
-        cv2.imwrite(output_dir_2D + str(('%04d'% i)) + '_2D.png', image)
+        cv2.imwrite(output_dir_2D + str(('%07d'% i)) + '_2D.png', image)
 
         ## 3D
         fig = plt.figure( figsize=(9.6, 5.4))
@@ -225,7 +226,8 @@ def get_pose3D(video_path, output_dir):
 
         output_dir_3D = output_dir +'pose3D/'
         os.makedirs(output_dir_3D, exist_ok=True)
-        plt.savefig(output_dir_3D + str(('%04d'% i)) + '_3D.png', dpi=200, format='png', bbox_inches = 'tight')
+        plt.savefig(output_dir_3D + str(('%07d'% i)) + '_3D.png', dpi=200, format='png', bbox_inches = 'tight')
+        plt.close(fig)
         
     print('Generating 3D pose successful!')
 
@@ -260,12 +262,14 @@ def get_pose3D(video_path, output_dir):
         ## save
         output_dir_pose = output_dir +'pose/'
         os.makedirs(output_dir_pose, exist_ok=True)
-        plt.savefig(output_dir_pose + str(('%04d'% i)) + '_pose.png', dpi=200, bbox_inches = 'tight')
+        plt.savefig(output_dir_pose + str(('%07d'% i)) + '_pose.png', dpi=200, bbox_inches = 'tight')
+        plt.close(fig)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--video', type=str, default='sample_video.mp4', help='input video')
-    parser.add_argument('--gpu', type=str, default='0', help='input video')
+    parser.add_argument('--gpu', type=str, default='0', help='gpu to use')
     args = parser.parse_args()
 
     os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu
